@@ -38,6 +38,8 @@ The function p defines the dynamics of the MDP
 $\left \{ a \right \}$
 
 $\left ( a \right )$
+
+$\left\{a\right\}$
 $$
 p\left(s^{\prime}, r \mid s, a\right) \doteq \operatorname{Pr}\left \{S_{t}=s^{\prime}, R_{t}=r \mid S_{t-1}=s, A_{t-1}=a\right \}
 $$
