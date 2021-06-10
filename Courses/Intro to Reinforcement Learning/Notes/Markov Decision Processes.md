@@ -70,9 +70,50 @@ $$
     r\left(s, a, s^{\prime}\right) \doteq \mathbb{E}\left[R_{t} \mid S_{t-1}=s, A_{t-1}=a, S_{t}=s^{\prime}\right]=\sum_{r \in \mathcal{R}} r \frac{p\left(s^{\prime}, r \mid s, a\right)}{p\left(s^{\prime} \mid s, a\right)}
     $$
 
+## MDP framework
 
+MDP框架是对于有目标的交互式学习问题的抽象，学习问题都可以概括成agent和环境来回传递的三个信号：
 
+- 动作信号：表示agent做出的选择
+- 状态信号：表示agent做出选择的基础
+- 收益信号：定义agent的目标
 
+MDP框架并不能有效地表示所有目标导向的学习任务，核心就是该任务是否满足马尔可夫性质。对于打扑克，之前所有打出的牌都会对剩下的牌堆造成影响。
+
+## MDP indication
+
+一个MDP可以由转移表格和转移图表示。如一个回收机器人的任务是收集罐子：
+
+- 动作集：{寻找、等待、充电}
+- 状态集是：{高电量，低电量}（并规定高电量不会充电）
+- 收益：每收集一个罐子作为一个单位收益，状态电量耗尽需人工充电收益为-3，r(寻找)>r(等待)
+- 转移概率：定义了 $\alpha$  和 $\beta $
+
+状态转移概率和转移的期望收益表示如下图：
+
+![image-20210610152936074](../Images/image-20210610152936074.png)
+
+State nodes（状态节点）：每个状态都有一个状态节点 s，大空心圆
+
+Action nodes（动作节点）：每个“状态，动作”都有一个动作节点 (s, a)，小实心圆+连线
+
+从状态s开始，执行动作a，会顺着连线从状态节点到达动作节点，然后环境做出响应，通过离开运动节点的箭头，转移到下一个状态节点 s' 。每个箭头都对应了“状态，动作，后继状态”。特别注意，从一个动作节点流出的概率和应为1。
+
+四参数动态函数p表示如下图：
+
+<img src="../Images/image-20210610154732095.png" alt="image-20210610154732095" style="zoom: 50%;" />
+
+## Rewards
+
+agent的目标被形式化表示为收益信号，通过环境传给agent。每个时刻，收益都是单一的标量 $R_{t} \in \mathbb{R}$。agent的目的就是最大化其收到的总收益。
+
+**Reward hypothesis（收益假设）**
+
+### Reward hypothesis（收益假设）
+
+That all of what we mean by goals and purposes can be well thought of as the maximization of the expected value of the cumulative sum of a received scalar signal (called reward).
+
+> 我们所有的目的可以归结为：最大化agent收到的收益累积和的概率期望值。
 
 ## Markov Property
 
