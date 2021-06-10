@@ -25,20 +25,19 @@ Under MDP, the environment is fully observable
 
 agent和环境持续交互：agent得到一个状态后，采取一个动作，环境对此做出响应，并进入下一个状态，把下个状态传回给agent。环境也会产生一个收益，通常是特定数值，也就是agent在动作选择过程中想要最大化的目标。这个交互过程可以通过马尔科夫决策过程表示。在MDP中，环境是全部可观测的，部分观测问题也可转换为MDP问题。
 
-$S_{t} \in \mathcal{S}$: each time step t, agent receives the environment’s state
+- 状态集 $S_{t} \in \mathcal{S}$: each time step t, agent receives the environment’s state
+- 动作集 $A_{t} \in \mathcal{A}(s)$: agent on that basis selects an action on that basis
+- 收益集 $R_{t+1} \in \mathcal{R} \subset \mathbb{R}$: as a consequence of its action, the agent receives a numerical reward
 
-$A_{t} \in \mathcal{A}(s)$: agent on that basis selects an action on that basis
+（使用$R_{t+1}$是为了强调下一时刻的收益和下一时刻的状态是被环境一起决定的，但文献中也会使用$R_{t}$）
 
-$R_{t+1} \in \mathcal{R} \subset \mathbb{R}$: as a consequence of its action, the agent receives a numerical reward [^1]
+在有限MDP中，随机变量$S_{t}$和$R_{t}$具有定义明确的离散概率分布，并仅与前继的状态和动作有关。在给定s和a后，$s^{\prime}$ 和 $r$ 在t时刻出现的概率用函数p表示。函数p定义了MDP的dynamics（动态特性）。$\mathcal{S} \times \mathcal{R} \times \mathcal{S} \times \mathcal{A} \rightarrow[0,1]$
 
-[^1]: 使用$R_{t+1}$是为了强调下一时刻的收益和下一时刻的状态是被环境一起决定的，但文献中也会使用$R_{t}$
+The function p defines the dynamics of the MDP
 
-
-
-
-
-
-
+$$
+p\left(s^{\prime}, r \mid s, a\right) \doteq \operatorname{Pr}\left\{S_{t}=s^{\prime}, R_{t}=r \mid S_{t-1}=s, A_{t-1}=a\right\}
+$$
 
 
 ## Markov Property（马尔科夫性质）
