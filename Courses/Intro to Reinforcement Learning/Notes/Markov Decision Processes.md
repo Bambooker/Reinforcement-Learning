@@ -29,7 +29,17 @@ $S_{t} \in \mathcal{S}$: each time step t, agent receives the environment’s st
 
 $A_{t} \in \mathcal{A}(s)$: agent on that basis selects an action on that basis
 
-$R_{t+1} \in \mathcal{R} \subset \mathbb{R}$
+$R_{t+1} \in \mathcal{R} \subset \mathbb{R}$: as a consequence of its action, the agent receives a numerical reward [^1]
+
+[^1]: 使用$R_{t+1}$是为了强调下一时刻的收益和下一时刻的状态是被环境一起决定的，但文献中也会使用$R_{t}$
+
+
+
+
+
+
+
+
 
 ## Markov Property（马尔科夫性质）
 
@@ -327,3 +337,6 @@ Control (search the optimal policy):
 
 Dynamic Programming
 
+
+
+[^ 1 ]: 
