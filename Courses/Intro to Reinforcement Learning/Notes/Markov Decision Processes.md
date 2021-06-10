@@ -23,7 +23,7 @@ Under MDP, the environment is fully observable
 - Optimal control primarily deals with continuous MDPs
 - Partially observable problems can be converted into MDPs
 
-agent和环境持续交互：agent得到一个状态后，采取一个动作，环境对此做出响应，并进入下一个状态，把下个状态传回给agent。环境也会产生一个收益，通常是特定数值，也就是agent在动作选择过程中想要最大化的目标。这个交互过程可以通过马尔科夫决策过程表示。在MDP中，环境是全部可观测的，部分观测问题也可转换为MDP问题。
+agent和环境持续交互：agent得到一个状态后，采取一个动作，环境对此做出响应，并进入下一个状态，把下个状态传回给agent。环境也会产生一个收益，通常是特定数值，也就是agent在动作选择过程中想要最大化的目标。这个交互过程可以通过马尔可夫决策过程表示。在MDP中，环境是全部可观测的，部分观测问题也可转换为MDP问题。
 
 - 状态集 $S_{t} \in \mathcal{S}$: each time step t, agent receives the environment’s state
 - 动作集 $A_{t} \in \mathcal{A}(s)$: agent on that basis selects an action on that basis
@@ -31,21 +31,46 @@ agent和环境持续交互：agent得到一个状态后，采取一个动作，�
 
 （使用$R_{t+1}$是为了强调下一时刻的收益和下一时刻的状态是被环境一起决定的，但文献中也会使用$R_{t}$）
 
-在有限MDP中，随机变量$S_{t}$和$R_{t}$具有定义明确的离散概率分布，并仅与前继的状态和动作有关。在给定s和a后，$s^{\prime}$ 和 $r$ 在t时刻出现的概率用函数p表示。函数p定义了MDP的dynamics（动态特性）。$\mathcal{S} \times \mathcal{R} \times \mathcal{S} \times \mathcal{A} \rightarrow[0,1]$
+## Dynamics function P
 
-The function p defines the dynamics of the MDP
-
-$\left \{ a \right \}$
-
-$\left ( a \right )$
-
-$\left\{a\right\}$
+有限MDP中，随机变量$S_{t}$和$R_{t}$具有定义明确的离散概率分布，并仅与前继的状态和动作有关。在给定s和a后，$s^{\prime}$ 和 $r$ 在t时刻出现的概率用函数p表示：
 $$
 p\left(s^{\prime}, r \mid s, a\right) \doteq \operatorname{Pr}\left \{S_{t}=s^{\prime}, R_{t}=r \mid S_{t-1}=s, A_{t-1}=a\right \}
 $$
 
+函数p定义了MDP的dynamics（动态特性），函数p：$\mathcal{S} \times \mathcal{R} \times \mathcal{S} \times \mathcal{A} \rightarrow[0,1]$是有四个参数的确定性函数。并且函数p为每个s和a的选择都指定了一个概率分布，满足归一性：
+$$
+\sum_{s^{\prime} \in \mathcal{S}} \sum_{r \in \mathcal{R}} p\left(s^{\prime}, r \mid s, a\right)=1, \text { for all } s \in \mathcal{S}, a \in \mathcal{A}(s)
+$$
 
-## Markov Property（马尔科夫性质）
+-   State-transition probabilities（三参数函数p：$\mathcal{S} \times \mathcal{S} \times \mathcal{A} \rightarrow[0,1]$）
+
+$$
+p\left(s^{\prime} \mid s, a\right) \doteq \operatorname{Pr}\left\{S_{t}=s^{\prime} \mid S_{t-1}=s, A_{t-1}=a\right\}=\sum_{r \in \mathcal{R}} p\left(s^{\prime}, r \mid s, a\right)
+$$
+
+​		状态转移概率函数：不考虑收益，只考虑状态的转移。State transition matrix P：
+$$
+P=\left[\begin{array}{cccc}P\left(s_{1} \mid s_{1}\right) & P\left(s_{2} \mid s_{1}\right) & \ldots & P\left(s_{N} \mid s_{1}\right) \\P\left(s_{1} \mid s_{2}\right) & P\left(s_{2} \mid s_{2}\right) & \ldots & P\left(s_{N} \mid s_{2}\right) \\\vdots & \vdots & \ddots & \vdots \\P\left(s_{1} \mid s_{N}\right) & P\left(s_{2} \mid s_{N}\right) & \ldots & P\left(s_{N} \mid s_{N}\right)\end{array}\right]
+$$
+
+-   Expected rewards for state–action pairs（双参数函数r：$\mathcal{S} \times \mathcal{A}  \rightarrow \mathbb{R}$）
+
+$$
+r(s, a) \doteq \mathbb{E}\left[R_{t} \mid S_{t-1}=s, A_{t-1}=a\right]=\sum_{r \in \mathcal{R}} r \sum_{s^{\prime} \in \mathcal{S}} p\left(s^{\prime}, r \mid s, a\right)
+$$
+
+​		“状态-动作”二元组的期望收益
+
+-   Expected rewards for state–action–next-state triples（三参数函数r：$\mathcal{S} \times \mathcal{A} \times \mathcal{S} \rightarrow \mathbb{R}$）
+    $$
+    r\left(s, a, s^{\prime}\right) \doteq \mathbb{E}\left[R_{t} \mid S_{t-1}=s, A_{t-1}=a, S_{t}=s^{\prime}\right]=\sum_{r \in \mathcal{R}} r \frac{p\left(s^{\prime}, r \mid s, a\right)}{p\left(s^{\prime} \mid s, a\right)}
+    $$
+    “状态-动作-后继状态”三元组的期望收益
+
+    
+
+## Markov Property
 
 The history of states: $ h_{t}=\{s_{1}, s_{2}, s_{3}, \ldots, s_{t}\} $
 
@@ -58,22 +83,11 @@ $$
 p\left(s_{t+1} \mid s_{t}, a_{t}\right)=p\left(s_{t+1} \mid h_{t}, a_{t}\right)
 $$
 
-如果状态的转移满足马尔科夫说明：下一个状态仅取决于当前状态，而与之前的状态无关。
+状态这个参数是包含了历史信息的。对于MDP，状态仅取决于前一个状态和前一个动作而与更早的状态和动作完全无关，因此状态被认为具有马尔可夫性质。
 
-## Markov Process/Markov Chain（马尔科夫链）
+## Markov Process/Markov Chain（马尔可夫链）
 
 <img src="../Images/image-20210608170827350.png" alt="image-20210608170827350" style="zoom: 33%;" />
-
-State transition matrix P specifies $p\left(s_{t+1}=s^{\prime} \mid s_{t}=s\right)$
-$$
-P=\left[\begin{array}{cccc}
-P\left(s_{1} \mid s_{1}\right) & P\left(s_{2} \mid s_{1}\right) & \ldots & P\left(s_{N} \mid s_{1}\right) \\
-P\left(s_{1} \mid s_{2}\right) & P\left(s_{2} \mid s_{2}\right) & \ldots & P\left(s_{N} \mid s_{2}\right) \\
-\vdots & \vdots & \ddots & \vdots \\
-P\left(s_{1} \mid s_{N}\right) & P\left(s_{2} \mid s_{N}\right) & \ldots & P\left(s_{N} \mid s_{N}\right)
-\end{array}\right]
-$$
-状态转移矩阵P用于描述状态的转移，每个元素表示从一个状态转移到另一个状态的概率。
 
 ### Example of MP
 
@@ -87,9 +101,9 @@ s3; s2; s3; s2; s1
 
 s3; s4; s4; s5; s5
 
-有了马尔科夫链，就可以取样，获得很多的轨迹。
+有了马尔可夫链，就可以取样，获得很多的轨迹。
 
-## Markov Reward Process （马尔科夫奖励过程）
+## Markov Reward Process （马尔可夫奖励过程）
 
 Markov Reward Process is a Markov Chain + reward
 
@@ -102,7 +116,7 @@ Definition of Markov Reward Process (MRP)
 
 If define number of states, R can be a vector
 
-马尔科夫奖励过程的状态集合和状态转移和马尔科夫链相同。R是奖励函数，是期望，是到达某个状态后可以获得的收益。D是折扣率。马尔科夫奖励过程就像是随波逐流的小船，按照P流动，按照R获得收益。
+马尔可夫奖励过程的状态集合和状态转移和马尔可夫链相同。R是奖励函数，是期望，是到达某个状态后可以获得的收益。D是折扣率。马尔可夫奖励过程就像是随波逐流的小船，按照P流动，按照R获得收益。
 
 ### Return and Value function
 
@@ -148,7 +162,7 @@ $$
 
     $\gamma$ = 1: Future reward is equal to the immediate reward
 
-马尔科夫链是带环的，需要避免无限的return。为了尽可能快地得到收益，而不是在未来某个时间获得收益。
+马尔可夫链是带环的，需要避免无限的return。为了尽可能快地得到收益，而不是在未来某个时间获得收益。
 
 ### Example of MRP
 
@@ -245,7 +259,7 @@ Definition of MDP
 
 MDP is a tuple: $(S, A, P, R, \gamma)$
 
-马尔科夫决策过程比马尔科夫奖励过程多了决策，也就是当前的状态S和采取的动作A共同影响P和R。
+马尔可夫决策过程比马尔可夫奖励过程多了决策，也就是当前的状态S和采取的动作A共同影响P和R。
 
 ### Policy in MDP
 
