@@ -1,6 +1,20 @@
-# Markov Decision Processes（马尔科夫决策过程）
+# Markov Decision Processes
+
+## Introduction
+
+- MDPs are a classical formalization of sequential decision making
+- Actions influence immediate rewards, subsequent states, and future rewards
+- MDPs involve delayed reward
+- Need to trade of immediate and delayed reward
+
+MDP是序列决策的表达形式，其当前动作不光影响及时收益，同时影响后续的状态和未来收益，因此涉及到延迟收益，需要权衡及时收益延迟收益。
+
+## The Agent–Environment interaction
 
 <img src="../Images/image-20210608162547201.png" alt="image-20210608162547201" style="zoom:67%;" />
+
+- agent: the learner and decision maker
+- Environment: everything outside the agent
 
 Markov Decision Process can model a lot of real-world problem. It formally describes the framework of reinforcement learning
 
@@ -9,7 +23,13 @@ Under MDP, the environment is fully observable
 - Optimal control primarily deals with continuous MDPs
 - Partially observable problems can be converted into MDPs
 
-在强化学习中，agent和环境的交互如图所示。agent在得到环境的状态后，采取一个动作，并返还给环境；环境会进入下一个状态，把下个状态传回agent。这个交互过程可以通过马尔科夫决策过程表示。在马尔科夫决策过程中，环境是全部可观测的，部分观测问题也可以转换为MDP问题。
+agent和环境持续交互：agent得到一个状态后，采取一个动作，环境对此做出响应，并进入下一个状态，把下个状态传回给agent。环境也会产生一个收益，通常是特定数值，也就是agent在动作选择过程中想要最大化的目标。这个交互过程可以通过马尔科夫决策过程表示。在MDP中，环境是全部可观测的，部分观测问题也可转换为MDP问题。
+
+$S_{t} \in \mathcal{S}$: each time step t, agent receives the environment’s state
+
+$A_{t} \in \mathcal{A}(s)$: agent on that basis selects an action on that basis
+
+$R_{t+1} \in \mathcal{R} \subset \mathbb{R}$
 
 ## Markov Property（马尔科夫性质）
 
@@ -294,5 +314,16 @@ MDP: Navigate the boat
 
 Prediction (evaluate a given policy): 
 
-Input: MDP $<\mathcal{S}, \mathcal{A}, \mathcal{P}, \mathcal{R}, \gamma>$ and policy $\pi$ or MRP
+- Input: MDP $<\mathcal{S}, \mathcal{A}, \mathcal{P}, \mathcal{R}, \gamma>$ and policy $\pi$ or MRP $<\mathcal{S}, \mathcal{P}^{\pi}, \mathcal{R}^{\pi}, \gamma>$
+- Output: value function $V^{\pi}$
+
+Control (search the optimal policy):
+
+- Input: MDP $<\mathcal{S}, \mathcal{A}, \mathcal{P}, \mathcal{R}, \gamma>$ 
+
+- Output: optimal value function $V^{*}$ and optimal policy $\pi^{*}$
+
+预测和控制是MDP的两个核心问题。预测就是计算价值函数；控制就是寻找一个最佳的策略，并计算对应的价值函数。两个问题可以通过动态规划解决。
+
+Dynamic Programming
 
