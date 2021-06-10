@@ -34,8 +34,10 @@ agent和环境持续交互：agent得到一个状态后，采取一个动作，�
 在有限MDP中，随机变量$S_{t}$和$R_{t}$具有定义明确的离散概率分布，并仅与前继的状态和动作有关。在给定s和a后，$s^{\prime}$ 和 $r$ 在t时刻出现的概率用函数p表示。函数p定义了MDP的dynamics（动态特性）。$\mathcal{S} \times \mathcal{R} \times \mathcal{S} \times \mathcal{A} \rightarrow[0,1]$
 
 The function p defines the dynamics of the MDP
+
+$\doteq \operatorname{Pr}\left\{S_{t}=s^{\prime}, R_{t}=r \mid S_{t-1}=s, A_{t-1}=a\right\}$
 $$
-p\left(s^{\prime}, r \mid s, a\right) \doteq \operatorname{Pr}\left\{S_{t}=s^{\prime}, R_{t}=r \mid S_{t-1}=s, A_{t-1}=a\right\}
+p\left(s^{\prime}, r \mid s, a\right)
 $$
 
 
