@@ -35,9 +35,8 @@ agent和环境持续交互：agent得到一个状态后，采取一个动作，�
 
 The function p defines the dynamics of the MDP
 
-$\doteq {Pr}\operatorname\left\{S_{t}=s^{\prime}, R_{t}=r \mid S_{t-1}=s, A_{t-1}=a\right\}$
 $$
-p\left(s^{\prime}, r \mid s, a\right)
+p\left(s^{\prime}, r \mid s, a\right) \doteq \operatorname{Pr}\left \{S_{t}=s^{\prime}, R_{t}=r \mid S_{t-1}=s, A_{t-1}=a\right \}
 $$
 
 
