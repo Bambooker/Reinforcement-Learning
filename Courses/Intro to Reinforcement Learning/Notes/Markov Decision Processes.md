@@ -224,9 +224,7 @@ policy决定了agent的行为，这个函数的输入是状态，输出是动作
 价值函数是状态（或状态-动作）的函数，用来评估当前agent在给定的状态（状态-动作）下**有多好**。**有多好**是用未来预期的收益来定义的，也就是回报的期望。
 $$
 \begin{aligned}
-\mathbb{E}_{\pi}\left[R_{t+1} \mid S_{t}=
-s\right] &= \sum_{a} \pi(a \mid s) r(s, a) \\
-&= \sum_{a} \pi(a \mid s) \sum_{r \in \mathcal{R}} r \sum_{s^{\prime} \in \mathcal{S}} p\left(s^{\prime}, r \mid s, a\right) \\
+\mathbb{E}_{\pi}\left[R_{t+1} \mid S_{t}= s\right] &= \sum_{a} \pi(a \mid s) r(s, a) \\&= \sum_{a} \pi(a \mid s) \sum_{r \in \mathcal{R}} r \sum_{s^{\prime} \in \mathcal{S}} p\left(s^{\prime}, r \mid s, a\right) \\
 \end{aligned}
 $$
 
