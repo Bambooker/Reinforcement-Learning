@@ -204,10 +204,10 @@ $$
 
 ## Policy
 
-• A policy is the agent’s behavior model
-• It is a map function from state/observation to action.
-• Stochastic policy: Probabilistic sample $\pi(a \mid s)=P\left[A_{t}=a \mid S_{t}=s\right]$
-• Deterministic policy: $a^{*}=\arg \max \pi(a \mid s)$
+- A policy is the agent’s behavior model
+- It is a map function from state/observation to action.
+- Stochastic policy: Probabilistic sample $\pi(a \mid s)=P\left[A_{t}=a \mid S_{t}=s\right]$
+- Deterministic policy: $a^{*}=\arg \max \pi(a \mid s)$
 
 policy决定了agent的行为，这个函数的输入是状态，输出是动作，实际上是从状态到每个动作的选择概率之间的映射。分为两种：随机策略和决定性策略。$\pi(a \mid s)$ 表示在状态s选择动作a的概率，是个普通函数。对每个 $s \in \mathcal{S}$ 都定义了在 $a \in \mathcal{A}$ 上的概率分布。
 
@@ -222,12 +222,19 @@ policy决定了agent的行为，这个函数的输入是状态，输出是动作
 ## Value Function
 
 价值函数是状态（或状态-动作）的函数，用来评估当前agent在给定的状态（状态-动作）下**有多好**。**有多好**是用未来预期的收益来定义的，也就是回报的期望。
-
-
+$$
+\mathbb{E}_{\pi}\left[R_{t+1} \mid S_{t}=s\right]=\sum_{a} \pi(a \mid s) \sum_{s^{\prime}, r} r p\left(s^{\prime}, r \mid s, a\right)
 $$
 
-\mathbb{E}_{\pi} \left[R_{t+1} \mid S_{t} = s\right]  = \sum_{a} \pi (a \mid s) r(s, a) = \sum_{a} \pi(a \mid s) \sum_{r \in \mathcal{R}} r \sum_{s^{\prime} \in \mathcal{S}}p\left(s^{\prime}, r \mid s, a\right)
 $$
+\mathbb{E}_{\pi} \left[R_{t+1} \mid S_{t} = s\right]  = \sum_{a} \pi (a \mid s) r(s, a) = \sum_{a} \pi(a \mid s)
+$$
+
+$$
+\mathbb{E}_{\pi}\left[R_{t+1} \mid S_{t}=s\right]=\sum_{a} \pi(a \mid s) \sum_{r \in \mathcal{R}} r \sum_{s^{\prime} \in \mathcal{S}}p\left(s^{\prime}, r \mid s, a\right)
+$$
+
+
 
 ## Markov Reward Process （马尔可夫奖励过程）
 
