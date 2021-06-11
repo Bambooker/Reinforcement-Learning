@@ -35,7 +35,7 @@ agent和环境持续交互：agent得到一个状态后，采取一个动作，�
 
 有限MDP中，随机变量$S_{t}$和$R_{t}$具有定义明确的离散概率分布，并仅与前继的状态和动作有关。在给定s和a后，$s^{\prime}$ 和 $r$ 在t时刻出现的概率用**四参数动态函数p**表示：
 $$
-p\left(s^{\prime}, r \mid s, a\right) \doteq \operatorname{Pr}\left \{S_{t}=s^{\prime}, R_{t}=r \mid S_{t-1}=s, A_{t-1}=a\right \}
+p\left(s^{\prime}, r \mid s, a\right) \doteq \operatorname{Pr} \left\{S_{t}=s^{\prime}, R_{t}=r \mid S_{t-1}=s, A_{t-1}=a \right \}
 $$
 
 函数p定义了MDP的动态特性（dynamics），函数p：$\mathcal{S} \times \mathcal{R} \times \mathcal{S} \times \mathcal{A} \rightarrow[0,1]$是有四个参数的确定性函数。函数p完全表达了MDP的动态信息。函数p满足归一性：
@@ -234,7 +234,7 @@ $$
 \mathbb{E}_{\pi}\left[R_{t+1} \mid S_{t}=s\right]=\sum_{a} \pi(a \mid s) \sum_{r \in \mathcal{R}} r \sum_{s^{\prime} \in \mathcal{S}}p\left(s^{\prime}, r \mid s, a\right)
 $$
 
-$\mathbb{E}_{\pi}\left[R_{t+1} \mid S_{t}=s\right]$
+$\mathbb{{E}_{\pi}} \left[R_{t+1} \mid S_{t}=s\right]$
 
 $\mathbb{E}\left[R_{t+1} \mid S_{t}=s\right]$
 
