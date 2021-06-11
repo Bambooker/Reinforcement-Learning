@@ -234,7 +234,9 @@ $$
 \mathbb{E}_{\pi}\left[R_{t+1} \mid S_{t}=s\right]=\sum_{a} \pi(a \mid s) \sum_{r \in \mathcal{R}} r \sum_{s^{\prime} \in \mathcal{S}}p\left(s^{\prime}, r \mid s, a\right)
 $$
 
-$\mathbb{{E}_{\pi}} \left[R_{t+1} \mid S_{t}=s\right]$
+$\mathbb{E}_{\pi}$
+
+ \left[R_{t+1} \mid S_{t}=s\right]$
 
 $\mathbb{E}\left[R_{t+1} \mid S_{t}=s\right]$
 
