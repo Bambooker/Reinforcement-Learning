@@ -240,11 +240,11 @@ ${\left[R_{t+1} \mid S_{t}=s\right]}$
 
 ${\mathbb{E}}_{\pi} \left[R_{t+1} \mid S_{t}=s\right]$
 
-${\mathbb{E}}_{\pi}$
+${\mathbb{E}}_{\pi}$$\left[R_{t+1} \mid S_{t}=s\right]$
 
 $\mathbb{E}\left[G_{t} \mid s_{t}=s\right]$
 
-$\left[R_{t+1} \mid S_{t}=s\right]$
+
 
 $\sum_{a} \pi (a \mid s) r(s, a) $
 
