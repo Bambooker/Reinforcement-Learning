@@ -38,10 +38,12 @@ $$
 p\left(s^{\prime}, r \mid s, a\right) \doteq \operatorname{Pr}\left \{S_{t}=s^{\prime}, R_{t}=r \mid S_{t-1}=s, A_{t-1}=a\right \}
 $$
 
-函数p定义了MDP的dynamics（动态特性），函数p：$\mathcal{S} \times \mathcal{R} \times \mathcal{S} \times \mathcal{A} \rightarrow[0,1]$是有四个参数的确定性函数。并且函数p为每个s和a的选择都指定了一个概率分布，满足归一性：
+函数p定义了MDP的动态特性（dynamics），函数p：$\mathcal{S} \times \mathcal{R} \times \mathcal{S} \times \mathcal{A} \rightarrow[0,1]$是有四个参数的确定性函数。函数p完全表达了MDP的动态信息。函数p满足归一性：
 $$
 \sum_{s^{\prime} \in \mathcal{S}} \sum_{r \in \mathcal{R}} p\left(s^{\prime}, r \mid s, a\right)=1, \text { for all } s \in \mathcal{S}, a \in \mathcal{A}(s)
 $$
+
+注意：四参数函数p是给定了前继状态和动作后，状态信号和收益信号二元组出现的概率。其中收益信号同样满足一个分布，即在s，a，s’ 均确定的情况下，r的值是不确定的（虽然有些模型只定义了从s1进入s2的收益为1）。
 
 - State-transition probabilities（三参数函数p：$\mathcal{S} \times \mathcal{S} \times \mathcal{A} \rightarrow[0,1]$）
 
@@ -52,10 +54,10 @@ $$
     $$
 
     State-transition matrix P 表示为：
-
-$$
-P=\left[\begin{array}{cccc}P\left(s_{1} \mid s_{1}\right) & P\left(s_{2} \mid s_{1}\right) & \ldots & P\left(s_{N} \mid s_{1}\right) \\P\left(s_{1} \mid s_{2}\right) & P\left(s_{2} \mid s_{2}\right) & \ldots & P\left(s_{N} \mid s_{2}\right) \\\vdots & \vdots & \ddots & \vdots \\P\left(s_{1} \mid s_{N}\right) & P\left(s_{2} \mid s_{N}\right) & \ldots & P\left(s_{N} \mid s_{N}\right)\end{array}\right]
-$$
+    $$
+    P=\left[\begin{array}{cccc}P\left(s_{1} \mid s_{1}\right) & P\left(s_{2} \mid s_{1}\right) & \ldots & P\left(s_{N} \mid s_{1}\right) \\P\left(s_{1} \mid s_{2}\right) & P\left(s_{2} \mid s_{2}\right) & \ldots & P\left(s_{N} \mid s_{2}\right) \\\vdots & \vdots & \ddots & \vdots \\P\left(s_{1} \mid s_{N}\right) & P\left(s_{2} \mid s_{N}\right) & \ldots & P\left(s_{N} \mid s_{N}\right)\end{array}\right]
+    $$
+    注意，这里的状态转移矩阵P和状态转移概率函数p不同，应有：$p\left(s^{\prime} \mid s \right) = \sum_{a \in \mathcal{A}} p\left(s^{\prime}\mid s, a\right)$
 
 - Expected rewards for state–action pairs（双参数函数r：$\mathcal{S} \times \mathcal{A}  \rightarrow \mathbb{R}$）
 
@@ -153,7 +155,7 @@ That all of what we mean by goals and purposes can be well thought of as the max
 
 我们寻求最大化期望回报 $G_{t}$，回报是收益的总和。
 
-**Episodic tasks（分幕式任务）：**每幕有terminal state（终结状态）随后从某状态样本重复开始。T为最终时刻。
+**Episodic tasks（分幕式任务）：**每幕有终结状态（terminal state）随后从某状态样本重复开始。T为最终时刻。
 $$
 G_{t} \doteq R_{t+1}+R_{t+2}+R_{t+3}+\cdots+R_{T}
 $$
@@ -168,6 +170,14 @@ G_{t} \doteq R_{t+1}+\gamma R_{t+2}+\gamma^{2} R_{t+3}+\cdots=\sum_{k=0}^{\infty
 $$
 $\gamma$ 表示折合率，$0 \leq \gamma \leq 1$。折合率决定了未来收益的现值。如何折合率为0，agent就是目光短浅的，只关心最大化及时收益。随着折合率接近1，agent会越来越有远见。从公式中可以发现，越往后的收益折扣的越多，这是因为我们更期待更快地获得收益。
 
+> **Why Discount rare** 
+>
+> - Avoids infinite returns in cyclic Markov processes
+>
+> - Uncertainty about the future may not be fully represented
+>
+> - If the reward is financial, immediate rewards may earn more interest than delayed rewards Animal/human behavior shows preference for immediate reward
+
 相邻时刻的回报有递归式（VERY IMPORTANT）：
 $$
 \begin{aligned}
@@ -176,7 +186,49 @@ G_{t} & \doteq R_{t+1}+\gamma R_{t+2}+\gamma^{2} R_{t+3}+\gamma^{3} R_{t+4}+\cdo
 &=R_{t+1}+\gamma G_{t+1}
 \end{aligned}
 $$
-注意：如果$G_{T}=0$，上式对任意时刻都成立，这会简化从收益序列计算回报的过程。
+注意：如果$G_{T}=0$，上式对任意时刻都成立，这会简化从收益序列计算回报的过程。也就是**反向计算**。
+
+**迷宫问题**
+
+设计一个走迷宫的agent，当逃脱时收益为+1，其余为0，分幕式任务。训练一段时间后，agent的能力不再增加。如果让agent一直随机运动，最终都会逃离终点，每一幕的回报G也都是1。而实际上我们需要的是尽快逃脱迷宫。另外，agent可能会陷入循环，需要额外的规则让agent进入最终状态（终点）。
+
+**Unified Notation**
+
+对于分幕式任务，一般地应表示为：$S_{t, i}$，i表示木，t表示幕中的时刻。但往往只用 $S_{t}$表示。
+
+如果把幕的终止看成一个吸收状态（absorbing state），只会转移到自己且只产生零收益。那么就可以将两个任务的回报统一表示：
+$$
+G_{t} \doteq \sum_{k=t+1}^{T} \gamma^{k-t-1} R_{k}
+$$
+其中，允许 $T=\infty$ or $\gamma=1$ (but not both)。
+
+## Policy
+
+• A policy is the agent’s behavior model
+• It is a map function from state/observation to action.
+• Stochastic policy: Probabilistic sample $\pi(a \mid s)=P\left[A_{t}=a \mid S_{t}=s\right]$
+• Deterministic policy: $a^{*}=\arg \max \pi(a \mid s)$
+
+policy决定了agent的行为，这个函数的输入是状态，输出是动作，实际上是从状态到每个动作的选择概率之间的映射。分为两种：随机策略和决定性策略。$\pi(a \mid s)$ 表示在状态s选择动作a的概率，是个普通函数。对每个 $s \in \mathcal{S}$ 都定义了在 $a \in \mathcal{A}$ 上的概率分布。
+
+**Stochastic policy（随机策略）**
+
+输入一个状态s，所有的动作都有一个概率（如向上的概率为0.3，向下的概率为0.7）；然后对这个分布进行采样（sample），最后获得实际采取的动作。
+
+**Deterministic policy（决定性策略）**
+
+输入一个状态s，采取极大化（最有可能的概率），提前决定好所有的动作中有一个概率为1，即一直采取这个动作。
+
+## Value Function
+
+价值函数是状态（或状态-动作）的函数，用来评估当前agent在给定的状态（状态-动作）下**有多好**。**有多好**是用未来预期的收益来定义的，也就是回报的期望。
+$$
+\begin{aligned}
+\mathbb{E}_{\pi}\left[R_{t+1} \mid S_{t}=
+s\right] &= \sum_{a} \pi(a \mid s) r(s, a) \\
+&= \sum_{a} \pi(a \mid s) \sum_{r \in \mathcal{R}} r \sum_{s^{\prime} \in \mathcal{S}} p\left(s^{\prime}, r \mid s, a\right) \\
+\end{aligned}
+$$
 
 ## Markov Reward Process （马尔可夫奖励过程）
 
@@ -195,11 +247,6 @@ If define number of states, R can be a vector
 
 ### Return and Value function
 
-#### Definition of Horizon
-
-- Number of maximum time steps in each episode
-- Can be infinite, otherwise called infinite Markov (reward) Process
-
 #### Definition of  value function Vt (s) for a MRP
 
 Expected return from t in state s
@@ -213,21 +260,9 @@ $$
 - Present value of future rewards
 - 价值函数就是Return的期望，也就是进入某个状态后，有可能在未来获得多少价值。
 
-#### Why Discount Factor 
+- 
 
-- Avoids infinite returns in cyclic Markov processes
-
-- Uncertainty about the future may not be fully represented
-
-- If the reward is financial, immediate rewards may earn more interest than delayed rewards Animal/human behavior shows preference for immediate reward
-
-- It is sometimes possible to use undiscounted Markov reward processes
-
-    $\gamma$ = 0: Only care about the immediate reward
-
-    $\gamma$ = 1: Future reward is equal to the immediate reward
-
-马尔可夫链是带环的，需要避免无限的return。为了尽可能快地得到收益，而不是在未来某个时间获得收益。
+- 
 
 ### Example of MRP
 

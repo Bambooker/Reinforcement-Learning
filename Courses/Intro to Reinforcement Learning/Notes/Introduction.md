@@ -206,22 +206,7 @@ Major Components of an RL Agent
 
 
 
-Policy
 
-• A policy is the agent’s behavior model
-• It is a map function from state/observation to action.
-• Stochastic policy: Probabilistic sample <img src="../Images/image-20210607113404157.png" alt="image-20210607113404157" style="zoom: 33%;" />
-• Deterministic policy: <img src="../Images/image-20210607113903842.png" alt="image-20210607113903842" style="zoom:33%;" />
-
-policy决定了agent的行为，这个函数的输入是状态，输出是动作。分为两种：随机策略和决定性策略。
-
-Stochastic policy（随机策略）
-
-是一个从状态集S 到动作集A 的条件概率分布。输入一个状态s，所有的动作都有一个概率（如向上的概率为0.3，向下的概率为0.7）；然后对这个分布进行采样（sample），最后获得实际采取的动作。
-
-Deterministic policy（决定性策略）
-
-是一个状态集S 到动作集A 的映射。输入一个状态s，采取极大化（最有可能的概率），提前决定好所有的动作中有一个概率为1，即一直采取这个动作。
 
 
 
