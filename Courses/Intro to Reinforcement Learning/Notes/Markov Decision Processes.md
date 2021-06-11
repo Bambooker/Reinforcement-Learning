@@ -7,7 +7,7 @@
 - MDPs involve delayed reward
 - Need to trade of immediate and delayed reward
 
-MDP是序列决策的表达形式，其当前动作不光影响及时收益，同时影响后续的状态和未来收益，因此涉及到延迟收益，需要权衡及时收益延迟收益。
+MDP是序列决策的表达形式，其当前动作不光影响及时收益，同时影响后续的状态和未来收益，因此涉及到延迟收益，需要权衡及时收益和延迟收益。
 
 ## The Agent–Environment interaction
 
@@ -29,7 +29,7 @@ agent和环境持续交互：agent得到一个状态后，采取一个动作，�
 - 动作集 $A_{t} \in \mathcal{A}(s)$: agent on that basis selects an action on that basis
 - 收益集 $R_{t+1} \in \mathcal{R} \subset \mathbb{R}$: as a consequence of its action, the agent receives a numerical reward
 
-（使用$R_{t+1}$是为了强调下一时刻的收益和下一时刻的状态是被环境一起决定的，但文献中也会使用$R_{t}$）
+> 使用$R_{t+1}$是为了强调下一时刻的收益和下一时刻的状态是被环境一起决定的，但文献中也会使用$R_{t}$
 
 ## Dynamics function P
 
@@ -45,10 +45,12 @@ $$
 
 - State-transition probabilities（三参数函数p：$\mathcal{S} \times \mathcal{S} \times \mathcal{A} \rightarrow[0,1]$）
 
-    状态转移概率函数：不考虑收益，只考虑状态的转移。
+    > 状态转移概率函数：不考虑收益，只考虑状态的转移。
+
     $$
     p\left(s^{\prime} \mid s, a\right) \doteq \operatorname{Pr}\left\{S_{t}=s^{\prime} \mid S_{t-1}=s, A_{t-1}=a\right\}=\sum_{r \in \mathcal{R}} p\left(s^{\prime}, r \mid s, a\right)
     $$
+
     State-transition matrix P 表示为：
 
 $$
@@ -57,7 +59,7 @@ $$
 
 - Expected rewards for state–action pairs（双参数函数r：$\mathcal{S} \times \mathcal{A}  \rightarrow \mathbb{R}$）
 
-    “状态-动作”二元组的期望收益
+    > “状态-动作”二元组的期望收益。
 
 $$
 r(s, a) \doteq \mathbb{E}\left[R_{t} \mid S_{t-1}=s, A_{t-1}=a\right]=\sum_{r \in \mathcal{R}} r \sum_{s^{\prime} \in \mathcal{S}} p\left(s^{\prime}, r \mid s, a\right)
@@ -65,10 +67,13 @@ $$
 
 - Expected rewards for state–action–next-state triples（三参数函数r：$\mathcal{S} \times \mathcal{A} \times \mathcal{S} \rightarrow \mathbb{R}$）
 
-    “状态-动作-后继状态”三元组的期望收益
+    > “状态-动作-后继状态”三元组的期望收益。
+
     $$
     r\left(s, a, s^{\prime}\right) \doteq \mathbb{E}\left[R_{t} \mid S_{t-1}=s, A_{t-1}=a, S_{t}=s^{\prime}\right]=\sum_{r \in \mathcal{R}} r \frac{p\left(s^{\prime}, r \mid s, a\right)}{p\left(s^{\prime} \mid s, a\right)}
     $$
+
+
 
 ## MDP framework
 
@@ -80,7 +85,22 @@ MDP框架是对于有目标的交互式学习问题的抽象，学习问题都�
 
 MDP框架并不能有效地表示所有目标导向的学习任务，核心就是该任务是否满足马尔可夫性质。对于打扑克，之前所有打出的牌都会对剩下的牌堆造成影响。
 
-## MDP indication
+## Markov Property
+
+The history of states: $ h_{t}=\{s_{1}, s_{2}, s_{3}, \ldots, s_{t}\} $
+
+State $s_{t}$ is Markovian if and only if: 
+$$
+p\left(s_{t+1} \mid s_{t}\right)=p\left(s_{t+1} \mid h_{t}\right)
+$$
+
+$$
+p\left(s_{t+1} \mid s_{t}, a_{t}\right)=p\left(s_{t+1} \mid h_{t}, a_{t}\right)
+$$
+
+状态这个参数是包含了历史信息的。对于MDP，状态仅取决于前一个状态和前一个动作而与更早的状态和动作完全无关，因此状态被认为具有马尔可夫性质。
+
+## Markov Process/Markov Chain
 
 一个MDP可以由转移表格和转移图表示。如一个回收机器人的任务是收集罐子：
 
@@ -103,42 +123,9 @@ Action nodes（动作节点）：每个“状态，动作”都有一个动作�
 
 <img src="../Images/image-20210610154732095.png" alt="image-20210610154732095" style="zoom: 50%;" />
 
-## Rewards
+有了马尔可夫链，就可以取样，获得很多的子序列（幕，轨迹）。
 
-agent的目标被形式化表示为收益信号，通过环境传给agent。每个时刻，收益都是单一的标量 $R_{t} \in \mathbb{R}$。agent的目的就是最大化其收到的总收益。
-
-**Reward hypothesis（收益假设）**
-
-### Reward hypothesis（收益假设）
-
-That all of what we mean by goals and purposes can be well thought of as the maximization of the expected value of the cumulative sum of a received scalar signal (called reward).
-
-> 我们所有的目的可以归结为：最大化agent收到的收益累积和的概率期望值。
-
-## Markov Property
-
-The history of states: $ h_{t}=\{s_{1}, s_{2}, s_{3}, \ldots, s_{t}\} $
-
-State $s_{t}$ is Markovian if and only if: 
-$$
-p\left(s_{t+1} \mid s_{t}\right)=p\left(s_{t+1} \mid h_{t}\right)
-$$
-
-$$
-p\left(s_{t+1} \mid s_{t}, a_{t}\right)=p\left(s_{t+1} \mid h_{t}, a_{t}\right)
-$$
-
-状态这个参数是包含了历史信息的。对于MDP，状态仅取决于前一个状态和前一个动作而与更早的状态和动作完全无关，因此状态被认为具有马尔可夫性质。
-
-## Markov Process/Markov Chain（马尔可夫链）
-
-<img src="../Images/image-20210608170827350.png" alt="image-20210608170827350" style="zoom: 33%;" />
-
-### Example of MP
-
-<img src="../Images/image-20210608171445656.png" alt="image-20210608171445656" style="zoom: 25%;" />
-
-Sample episodes starting from s3
+Sample episodes（幕）starting from s3
 
 s3; s4; s5; s6; s6
 
@@ -146,7 +133,50 @@ s3; s2; s3; s2; s1
 
 s3; s4; s4; s5; s5
 
-有了马尔可夫链，就可以取样，获得很多的轨迹。
+<img src="../Images/image-20210608171445656.png" alt="image-20210608171445656" style="zoom: 25%;" />
+
+## Rewards
+
+agent的目标被形式化表示为收益信号，通过环境传给agent。每个时刻，收益都是单一的标量 $R_{t} \in \mathbb{R}$。agent的目的就是最大化其收到的总收益。
+
+**Reward hypothesis（收益假设）**
+
+That all of what we mean by goals and purposes can be well thought of as the maximization of the expected value of the cumulative sum of a received scalar signal (called reward).
+
+> 我们所有的目的可以归结为：最大化agent收到的收益累积和的概率期望值。
+
+设立收益的方式要能真正表明我们的目的。收益信号只能用来传达什么是agent要实现的目标，而不是如何实现这个目标。例如在围棋中，我们可以设立获胜收益为+1，失败和平局为-1。只有获胜才能获得收益，吃掉对方的子（子目标）是不能获得收益的，这样agent就可能为了吃掉对方的子而输掉比赛。
+
+## Returns
+
+时刻 t 后agent接收的收益信号序列表示为：$R_{t+1}, R_{t+2}, R_{t+3}, \ldots$
+
+我们寻求最大化期望回报 $G_{t}$，回报是收益的总和。
+
+**Episodic tasks（分幕式任务）：**每幕有terminal state（终结状态）随后从某状态样本重复开始。T为最终时刻。
+$$
+G_{t} \doteq R_{t+1}+R_{t+2}+R_{t+3}+\cdots+R_{T}
+$$
+
+> 在分幕式任务中，有时需要区分非中介状态集 $\mathcal{S}$ ，和所有状态集 $\mathcal{S}^{+}$。
+>
+> Horizon (T): Number of maximum time steps in each episode，是个随机变量，因幕不同而不同。
+
+**Continuing tasks（持续性任务）：**agent和环境的交互在不断的发生，$T=\infty $。
+$$
+G_{t} \doteq R_{t+1}+\gamma R_{t+2}+\gamma^{2} R_{t+3}+\cdots=\sum_{k=0}^{\infty} \gamma^{k} R_{t+k+1}
+$$
+$\gamma$ 表示折合率，$0 \leq \gamma \leq 1$。折合率决定了未来收益的现值。如何折合率为0，agent就是目光短浅的，只关心最大化及时收益。随着折合率接近1，agent会越来越有远见。从公式中可以发现，越往后的收益折扣的越多，这是因为我们更期待更快地获得收益。
+
+相邻时刻的回报有递归式（VERY IMPORTANT）：
+$$
+\begin{aligned}
+G_{t} & \doteq R_{t+1}+\gamma R_{t+2}+\gamma^{2} R_{t+3}+\gamma^{3} R_{t+4}+\cdots \\
+&=R_{t+1}+\gamma\left(R_{t+2}+\gamma R_{t+3}+\gamma^{2} R_{t+4}+\cdots\right) \\
+&=R_{t+1}+\gamma G_{t+1}
+\end{aligned}
+$$
+注意：如果$G_{T}=0$，上式对任意时刻都成立，这会简化从收益序列计算回报的过程。
 
 ## Markov Reward Process （马尔可夫奖励过程）
 
@@ -169,16 +199,6 @@ If define number of states, R can be a vector
 
 - Number of maximum time steps in each episode
 - Can be infinite, otherwise called infinite Markov (reward) Process
-
-#### Definition of Return
-
-- Discounted sum of rewards from time step t to horizon
-
-$$
-G_{t}=R_{t+1}+\gamma R_{t+2}+\gamma^{2} R_{t+3}+\gamma^{3} R_{t+4}+\ldots+\gamma^{T-t-1} R_{T}
-$$
-
-- 从公式中可以发现，越往后的收益折扣的越多，因为我们更期待更快地获得收益。
 
 #### Definition of  value function Vt (s) for a MRP
 
@@ -402,4 +422,5 @@ Dynamic Programming
 
 
 
-[^ 1 ]: 
+多少度
+
