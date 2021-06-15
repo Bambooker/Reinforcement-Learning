@@ -491,7 +491,7 @@ In a lot of real-world problems, MDP model is either unknown or known by too big
 - Trajectories/episodes are collected by the agent's interaction with the environment, each contains: 
 
 $$
-\left\{S_{1}, A_{1}, R_{1}, S_{2}, A_{2}, R_{2}, \ldots, S_{T}, A_{T}, R_{T}\right\}
+\left\{S_{0}, A_{0}, R_{0}, S_{1}, A_{1}, R_{1}, \ldots, S_{T-1}, A_{T-1}, R_{T}\right\}
 $$
 
 Model-free RL 从agent和环境交互过程中采集到信息，并用于改进策略，使收益最大化，而不需要完备的环境模型。
@@ -525,5 +525,50 @@ Every-visit MC method: 每次访问型MC算法是用状态 s 的所有访问的�
 
 These two Monte Carlo (MC) methods are very similar but have slightly different theoretical properties. First-visit MC has been most widely studied, dating back to the 1940s. Every-visit MC extends more naturally to function approximation and eligibility traces.
 
+当状态 s 的访问次数趋于无穷，两种MC方法的平均值都会收敛于 $v_{\pi}(s)$。对于首次访问型MC，每个回报值都是对 $v_{\pi}(s)$ 的一个独立同分布的估计。根据大数定理，这个平均值的序列会收敛于它的期望。每次平均都是一个无偏估计，其误差的标准差以 $1 / \sqrt{n}$ 衰减，其中 n 为被平均的回报个数。对于每次访问型MC，平均值二阶收敛到 $v_{\pi}(s)$。
+
 ### First-visit MC Prediction
+
+<img src="../Images/image-20210615111449482.png" alt="image-20210615111449482" style="zoom: 50%;" />
+
+**MC预测算法**
+
+- 初始化
+
+​		V(s)：随机初始化数组。
+
+​		Return(s)：空数组。
+
+- 无限循环（对每幕，幕数为 $N(S_{t})$ , N = 1, 2, 3, ... , $N(S_{t})$ ）
+    - 根据策略生成一幕序列：$\left\{S_{0}, A_{0}, R_{0}, S_{1}, A_{1}, R_{1}, \ldots, S_{T-1}, A_{T-1}, R_{T}\right\}$
+    - N = 1
+    - G = 0
+    - 无限循环（对本幕中的每步，t = T-1, T-2, ... , 0）
+        - $G = \gamma G+R_{t+1}$
+        - 当 $S_{i}$ 出现时
+            - 若 $S_{i}$ 是否在 $S_{0},S_{1},\ldots,S_{t-1}$ 首次出现
+                - 将 G 加入Return($S_{i}$)
+                - $v(S_{t}) = v\left(S_{t}\right)+\frac{1}{N\left(S_{t}\right)}\left(G_{t}-v\left(S_{t}\right)\right)$
+    - N = N + 1
+
+注意：对于首次访问型MC，每一幕只会返回一个回报值。对于每次访问型MC，算法中没有判断状态 s 是否首次出现，每一幕可能会返回多个回报值。
+
+在计算每个状态的平均值时，有两种办法：
+
+- $\sum Return(S_{t}) / n$ ，其中 n 为被平均的回报个数。
+
+- Incremental Mean（增量式平均值）
+
+$$
+\begin{aligned}
+\mu_{t} &=\frac{1}{t} \sum_{j=1}^{t} x_{j} \\
+&=\frac{1}{t}\left(x_{t}+\sum_{j=1}^{t-1} x_{j}\right) \\
+&=\frac{1}{t}\left(x_{t}+(t-1) \mu_{t-1}\right) \\
+&=\mu_{t-1}+\frac{1}{t}\left(x_{t}-\mu_{t-1}\right)
+\end{aligned}
+$$
+
+
+
+​		
 
