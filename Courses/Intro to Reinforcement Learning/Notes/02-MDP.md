@@ -515,7 +515,7 @@ Model-free RL 从agent和环境交互过程中采集到信息，并用于改进�
 
 MC使用经验数据去近似估计期望数据，即对所有经过状态 s 之后产生的回报进行平均，随着越来越多的回报被观察到，平均值会收敛于期望值（The average should converge to the expected value）。
 
-**First-visit/every-visit method**
+### Two MC Methods
 
 Visit: Each occurrence of state s in an episode is called a visit to s
 
@@ -525,5 +525,5 @@ Every-visit MC method: 每次访问型MC算法是用状态 s 的所有访问的�
 
 These two Monte Carlo (MC) methods are very similar but have slightly different theoretical properties. First-visit MC has been most widely studied, dating back to the 1940s. Every-visit MC extends more naturally to function approximation and eligibility traces.
 
-**First-visit MC prediction**
+### First-visit MC Prediction
 
